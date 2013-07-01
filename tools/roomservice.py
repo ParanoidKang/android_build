@@ -150,7 +150,7 @@ def add_to_manifest(repositories):
     raw_xml = ElementTree.tostring(lm)
     raw_xml = '<?xml version="1.0" encoding="UTF-8"?>\n' + raw_xml
 
-    f = open('.repo/local_manifest.xml', 'w')
+    f = open('.repo/local_manifests/roomservice.xml', 'w')
     f.write(raw_xml)
     f.close()
 
@@ -209,4 +209,4 @@ else:
             print "Done"
             sys.exit()
 
-print "Repository for %s not found in the ParanoidAndroid Github repository list. If this is in error, you may need to manually add it to your local_manifest.xml." % device
+print "Repository for %s not found in the ParanoidAndroid Github repository list. If this is in error, you may need to manually add it to your local_manifests/roomservice.xml." % device
