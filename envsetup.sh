@@ -160,7 +160,7 @@ function setpaths()
     unset ARM_EABI_TOOLCHAIN ARM_EABI_TOOLCHAIN_PATH
     case $ARCH in
         arm)
-            if [! "$targetgccversion" == "4.6" ]
+            if [ ! "$targetgccversion" == "4.6" ]
             then
                toolchaindir=arm/arm-eabi-4.7/bin
             else
