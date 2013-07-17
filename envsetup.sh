@@ -136,7 +136,7 @@ function setpaths()
     # defined in core/config.mk
     targetgccversion=$(get_build_var TARGET_GCC_VERSION)
     export TARGET_GCC_VERSION=$targetgccversion
-
+    
     # The gcc toolchain does not exists for windows/cygwin. In this case, do not reference it.
     export ANDROID_EABI_TOOLCHAIN=
     local ARCH=$(get_build_var TARGET_ARCH)
@@ -144,9 +144,7 @@ function setpaths()
         x86) toolchaindir=x86/i686-linux-android-4.6/bin
             ;;
 
-        arm) #toolchaindir=arm/arm-linux-androideabi-$targetgccversion/bin
-             toolchaindir=arm/arm-linux-androideabi-4.9/bin
-
+        arm) toolchaindir=arm/arm-linux-androideabi-$targetgccversion/bin
             ;;
         mips) toolchaindir=mips/mipsel-linux-android-4.6/bin
             ;;
@@ -162,7 +160,12 @@ function setpaths()
     unset ARM_EABI_TOOLCHAIN ARM_EABI_TOOLCHAIN_PATH
     case $ARCH in
         arm)
-            toolchaindir=arm/arm-eabi-4.7/bin
+            if [! "$targetgccversion" == "4.6" ]
+            then
+               toolchaindir=arm/arm-eabi-4.7/bin
+            else
+               toolchaindir=arm/arm-eabi-4.6/bin
+            fi
             if [ -d "$gccprebuiltdir/$toolchaindir" ]; then
                  export ARM_EABI_TOOLCHAIN="$gccprebuiltdir/$toolchaindir"
                  ARM_EABI_TOOLCHAIN_PATH=":$gccprebuiltdir/$toolchaindir"
