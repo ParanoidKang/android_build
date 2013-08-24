@@ -163,12 +163,15 @@ def LoadBuildProp(zip):
     print "Warning: could not find SYSTEM/build.prop in %s" % zip
     data = ""
 
-  d = {}
-  for line in data.split("\n"):
-    line = line.strip()
-    if not line or line.startswith("#"): continue
-    name, value = line.split("=", 1)
-    d[name] = value
+  try:
+    d = {}
+    for line in data.split("\n"):
+      line = line.strip()
+      if not line or line.startswith("#"): continue
+      name, value = line.split("=", 1)
+      d[name] = value
+  except KeyError:
+    pass
   return d
 
 def LoadRecoveryFSTab(zip, fstab_version):
