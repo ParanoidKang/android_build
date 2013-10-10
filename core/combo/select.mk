@@ -47,18 +47,13 @@ $(combo_target)HAVE_STRLCAT := 0
 $(combo_target)HAVE_KERNEL_MODULES := 0
 
 $(combo_target)GLOBAL_CFLAGS := -fno-exceptions -Wno-multichar
-
 ifeq ($(TARGET_USE_O3),true)
 $(combo_target)RELEASE_CFLAGS := -O3 -g -fno-strict-aliasing
 $(combo_target)GLOBAL_LDFLAGS := -Wl,-O2
 else
-$(combo_target)RELEASE_CFLAGS := -Os -fno-tree-vectorize -fno-inline-functions -fno-unswitch-loops -fgcse-after-reload -fipa-cp-clone -fpredictive-commoning -fsched-spec-load -fvect-cost-model -g -Wstrict-aliasing=3 -Werror=strict-aliasing
-$(combo_target)GLOBAL_LDFLAGS := -Wl,-O2
+$(combo_target)RELEASE_CFLAGS := -O2 -g -fno-strict-aliasing
+$(combo_target)GLOBAL_LDFLAGS :=
 endif
-
-$(combo_target)RELEASE_CFLAGS := -Os -fno-tree-vectorize -fno-inline-functions -fno-unswitch-loops -fgcse-after-reload -fipa-cp-clone -fpredictive-commoning -fsched-spec-load -fvect-cost-model -g -Wstrict-aliasing=3 -Werror=strict-aliasing
-$(combo_target)GLOBAL_LDFLAGS := -Wl,-O2
-
 $(combo_target)GLOBAL_ARFLAGS := crsP
 
 $(combo_target)EXECUTABLE_SUFFIX :=
@@ -94,9 +89,17 @@ ifneq ($(USE_CCACHE),)
     CCACHE_HOST_TAG := linux-$(BUILD_ARCH)
   endif
 
-  ccache := prebuilts/misc/$(CCACHE_HOST_TAG)/ccache/ccache
-  # Check that the executable is here.
-  ccache := $(strip $(wildcard $(ccache)))
+  # Search executable
+  ccache =
+  ifneq ($(strip $(wildcard /usr/bin/ccache)),)
+    ccache := /usr/bin/ccache
+    # Enable compression with host executable
+    export CCACHE_COMPRESS := 1
+  else ifneq ($(strip $(wildcard $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_EXTRA_TAG)/ccache/ccache)),)
+    ccache := $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_EXTRA_TAG)/ccache/ccache
+  else ifneq ($(strip $(wildcard $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_TAG)/ccache/ccache)),)
+    ccache := $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_TAG)/ccache/ccache
+  endif
 
   # Configure ccache
   ifdef ccache
