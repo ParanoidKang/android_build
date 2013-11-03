@@ -84,7 +84,7 @@ def indent(elem, level=0):
 
 def get_from_manifest(devicename):
     try:
-        lm = ElementTree.parse(".repo/local_manifest.xml")
+        lm = ElementTree.parse(".repo/local_manifests/roomservice.xml")
         lm = lm.getroot()
     except:
         lm = ElementTree.Element("manifest")
@@ -108,7 +108,7 @@ def get_from_manifest(devicename):
 
 def is_in_manifest(projectname):
     try:
-        lm = ElementTree.parse(".repo/local_manifest.xml")
+        lm = ElementTree.parse(".repo/local_manifests/roomservice.xml")
         lm = lm.getroot()
     except:
         lm = ElementTree.Element("manifest")
@@ -120,8 +120,12 @@ def is_in_manifest(projectname):
     return None
 
 def add_to_manifest(repositories):
+    if not os.path.exists(".repo/local_manifests/"):
+        os.makedirs(".repo/local_manifests/")
+
+
     try:
-        lm = ElementTree.parse(".repo/local_manifest.xml")
+        lm = ElementTree.parse(".repo/local_manifests/roomservice.xml")
         lm = lm.getroot()
     except:
         lm = ElementTree.Element("manifest")
@@ -135,7 +139,7 @@ def add_to_manifest(repositories):
 
         print 'Adding dependency: ParanoidAndroid/%s -> %s' % (repo_name, repo_target)
         project = ElementTree.Element("project", attrib = { "path": repo_target,
-            "remote": "github", "name": "ParanoidAndroid/%s" % repo_name, "revision": "jellybean" })
+            "remote": "github", "name": "ParanoidAndroid/%s" % repo_name, "revision": "jb43" })
 
         if 'branch' in repository:
             project.set('revision',repository['branch'])
@@ -146,7 +150,7 @@ def add_to_manifest(repositories):
     raw_xml = ElementTree.tostring(lm)
     raw_xml = '<?xml version="1.0" encoding="UTF-8"?>\n' + raw_xml
 
-    f = open('.repo/local_manifest.xml', 'w')
+    f = open('.repo/local_manifests/roomservice.xml', 'w')
     f.write(raw_xml)
     f.close()
 
