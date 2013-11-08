@@ -15,6 +15,15 @@
 # limitations under the License.
 #
 
+if [ -d "vendor/pa" ];then
+    ANDROID_BUILD_TOP=`pwd`
+    exit 1
+else
+    echo "android top dir is not found!"
+    echo "please confirm you're on top dir of the source"
+    exit 1
+fi
+
 if [ -z "$OUT_DIR" ];then
 	TMP=out/target/OTA/tmp
 else
